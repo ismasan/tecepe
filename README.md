@@ -37,12 +37,9 @@ In reality you would do some more computation than just proxying Redis!
 This is simple enough that it should be easy to write clients in different langs/stacks. See lib/tecepe/blocking_client.rb for a reference implementation.
 
 ```ruby
-socket = Tecepe::BlockingClient.new('localhost', 5555)
+PEMISSIONS_SERVICE = Tecepe::BlockingClient.new('localhost', 5555)
 
-20.times do |i|
-  response = socket.call 'perms', user_id: 3          # Send request
-  puts "RESPONSE: #{response}"
-end
+PEMISSIONS_SERVICE.call 'perms', user_id: current_user.id, @product.id # true/false
 ```
 
 ## Contributing
