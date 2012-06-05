@@ -22,13 +22,15 @@ Or install it yourself as:
 Worker.listen("localhost", 5555) do
   
   on 'perms' do |json|
-    EventMachine::Timer.new(json['delay'].to_f) do
-      reply message: ">>>you sent: #{json}\n"
+    redis.smember("permissions:#{json['user_id']}", json['product_id']) do |r|
+      reply allowed: r
     end
   end
 
 end
 ```
+
+In reality you would do some more computation than just proxying Redis!
 
 ## Clients
 
