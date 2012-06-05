@@ -3,6 +3,9 @@ require 'json'
 require "timeout"
 
 # Simple (blocking) client with basic reconnect functionality
+# Some code taken from Redis client
+# https://github.com/redis/redis-rb
+#
 # EXAMPLE:
 # socket = Tecepe::BlockingClient.new('localhost', 5555)
 # 
