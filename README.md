@@ -30,6 +30,10 @@ Worker.listen("localhost", 5555) do
 end
 ```
 
+## Clients
+
+This is simple enough that it should be easy to write clients in different langs/stacks. See lib/tecepe/blocking_client.rb for a reference implementation.
+
 ## Contributing
 
 1. Fork it
