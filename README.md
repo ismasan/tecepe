@@ -34,6 +34,15 @@ end
 
 This is simple enough that it should be easy to write clients in different langs/stacks. See lib/tecepe/blocking_client.rb for a reference implementation.
 
+```ruby
+socket = Tecepe::BlockingClient.new('localhost', 5555)
+
+20.times do |i|
+  response = socket.call 'perms', user_id: 3          # Send request
+  puts "RESPONSE: #{response}"
+end
+```
+
 ## Contributing
 
 1. Fork it
