@@ -32,7 +32,7 @@ module Tecepe
     def call(event_name, payload)
       json = JSON.generate(event: event_name, cid: @cid, payload: payload)
       ensure_connected do
-        @socket.print json
+        @socket.print "#{json}\n"
         JSON.parse(@socket.gets)
       end
     end

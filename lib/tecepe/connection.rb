@@ -3,7 +3,7 @@ require 'json'
 
 module Tecepe
   
-  class Connection < EventMachine::Connection
+  module Connection
     
     HEARTBEAT = 5.freeze
     
@@ -19,8 +19,14 @@ module Tecepe
       @heartbeat.cancel
       super
     end
-
+    
     def receive_data data
+      (@buffer ||= BufferedTokenizer.new).extract(data).each do |line|
+        receive_line(line)
+      end
+    end
+    
+    def receive_line data
        begin
          json = JSON.parse(data)
          @cid = json['cid']
