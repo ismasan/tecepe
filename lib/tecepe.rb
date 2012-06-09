@@ -25,4 +25,8 @@ module Tecepe
       EventMachine::start_server host, port, Tecepe::Connection
     }
   end
+  
+  def self.clear_handlers
+    @events = {}
+  end
 end
