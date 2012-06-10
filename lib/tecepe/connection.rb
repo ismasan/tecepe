@@ -8,19 +8,20 @@ module Tecepe
     HEARTBEAT = 5.freeze
     
     def post_init
-      puts '[conn]'
       @heartbeat = setup_heartbeat
       @cid = nil
+      log :conn, signature
       super
     end
 
     def unbind
-      puts '[bye]'
+      log :bye
       @heartbeat.cancel
       super
     end
     
     def receive_data data
+      log :data, data
       (@buffer ||= BufferedTokenizer.new).extract(data).each do |line|
         receive_line(line)
       end
@@ -30,7 +31,7 @@ module Tecepe
        begin
          json = JSON.parse(data)
          @cid = json['cid']
-         puts "[rcvd #{@cid}] #{json['payload']}"
+         log :rcvd, json['payload']
          Tecepe.dispatch self, json['event'], json['payload']
        rescue JSON::ParserError => e
          send_error e.message
@@ -41,9 +42,9 @@ module Tecepe
 
     def reply(payload = {}, status = 1)
       json = JSON.generate(status: status, payload: payload)
-      puts "[repl #{@cid}] #{json}"
+      log :repl, json
       if error?
-        puts "[error]"
+        log :error
       else
         send_data "#{json}\n"
       end
@@ -57,11 +58,14 @@ module Tecepe
 
     def setup_heartbeat
       EventMachine::PeriodicTimer.new(HEARTBEAT) do
-        puts '[heartbeat]'
+        log :heartbeat
         send_data ''
       end
     end
-
+    
+    def log(key, msg = '')
+      puts "#{Process.pid} [#{key} #{@cid}] #{msg}"
+    end
   end
   
 end
