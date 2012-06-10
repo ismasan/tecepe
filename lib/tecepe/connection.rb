@@ -41,12 +41,16 @@ module Tecepe
     end
 
     def reply(payload = {}, status = 1)
-      json = JSON.generate(status: status, payload: payload)
-      log :repl, json
-      if error?
-        log :error
-      else
-        send_data "#{json}\n"
+      begin
+        json = JSON.generate(status: status, payload: payload)
+        log :repl, json
+        if error?
+          log :error
+        else
+          send_data "#{json}\n"
+        end
+      rescue Encoding::UndefinedConversionError => e
+        send_error e.message
       end
     end
 
