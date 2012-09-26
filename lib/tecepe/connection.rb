@@ -5,10 +5,7 @@ module Tecepe
   
   module Connection
     
-    HEARTBEAT = 5.freeze
-    
     def post_init
-      @heartbeat = setup_heartbeat
       @cid = nil
       log :conn, signature
       super
@@ -16,7 +13,6 @@ module Tecepe
 
     def unbind
       log :bye
-      @heartbeat.cancel
       super
     end
     
@@ -59,13 +55,6 @@ module Tecepe
     end
 
     private
-
-    def setup_heartbeat
-      EventMachine::PeriodicTimer.new(HEARTBEAT) do
-        log :heartbeat
-        send_data ''
-      end
-    end
     
     def log(key, msg = '')
       puts "#{Process.pid} [#{key} #{@cid}] #{msg}"
